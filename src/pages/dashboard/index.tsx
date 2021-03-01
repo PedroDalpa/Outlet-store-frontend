@@ -1,4 +1,5 @@
 import { SideBarProvider } from '../../contexts/SideBarContext';
+import { GetServerSideProps } from 'next';
 
 export default function Dashboard() {
  
@@ -13,3 +14,12 @@ export default function Dashboard() {
   );
 }
 
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { token } = context.req.cookies;
+  
+  
+  context.res.setHeader('authorization','token')
+  return {
+    props: {},
+  };
+};

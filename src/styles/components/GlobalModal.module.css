@@ -13,34 +13,24 @@
 .container {
   background: var(--white);
   width: 100%;
-  max-width: 400px;
-  padding: 2rem 3rem;
+  max-width: 850px;
+  padding: 0.5rem 1.5rem;
   border-radius: 5px;
   box-shadow: 0 0 60px rgba(0, 0, 0, 0.05);
-  text-align: center;
+  text-align: start;
   position: relative;
+  margin-left: 14rem;
 }
 
 .container header {
-  font-size: 8.75rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  color: var(--blue);
-  background: url('/icons/levelup.svg') no-repeat center;
-  background-size: contain;
-}
-
-.container strong {
-  font-size: 2.5rem;
   color: var(--title);
+  background-size: contain;
+  margin-top: 0;
 }
 
-.container p {
-  font-size: 1.25rem;
-  color: var(--text);
-  margin-top: 0.25rem;
-}
-
-.container button {
+.container>button {
   position: absolute;
   right: 0.5rem;
   top: 0.5rem;

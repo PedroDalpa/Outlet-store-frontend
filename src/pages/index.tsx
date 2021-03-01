@@ -1,26 +1,38 @@
-import { GetServerSideProps } from 'next';
-import Head from 'next/head';
+
+
 import { useState } from 'react';
 import { useRouter } from 'next/router'
+import Cookies from 'js-cookie';
 
 
 import styles from '../styles/pages/Home.module.css';
+import api from '../services/api';
 
-interface HomeProps {
-  level: number;
-  currentExperience: number;
-  challengesCompleted: number;
-}
 
-export default function Home(props: HomeProps) {
+
+export default function Home() {
   const router = useRouter()
-  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  function handleLogin(e) {
+  async function handleLogin(e) {
     e.preventDefault();
-
-    router.push('/dashboard');
+    try {
+      
+      const response = await api.post('/auth', {email, password});
+      localStorage.setItem('token', JSON.stringify(response.data.token));
+      
+     
+      Cookies.set('token', String(`Bearer ${response.data.token}`));
+      
+      
+      router.push('/dashboard');
+     
+    } catch (error) {
+      console.error(error);
+      
+    }
+    
 
   }
 
@@ -34,13 +46,13 @@ export default function Home(props: HomeProps) {
 
           <input 
             placeholder="Seu usuário"
-            value={name}
-            onChange={e => setName(e.target.value)}
+            value={email}
+            onChange={e => setEmail(e.target.value)}
           />
           
           <input 
             placeholder="Sua senha"
-            
+            type="password"
             onChange={e => setPassword(e.target.value)}
           />
 
@@ -56,14 +68,4 @@ export default function Home(props: HomeProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { level, currentExperience, challengesCompleted } = context.req.cookies;
 
-  return {
-    props: {
-      level: Number(level),
-      currentExperience: Number(currentExperience),
-      challengesCompleted: Number(challengesCompleted),
-    },
-  };
-};
