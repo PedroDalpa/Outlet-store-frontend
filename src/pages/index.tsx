@@ -7,6 +7,7 @@ import Cookies from 'js-cookie';
 
 import styles from '../styles/pages/Home.module.css';
 import api from '../services/api';
+import { Notification } from '../components/Notification';
 
 
 
@@ -20,9 +21,9 @@ export default function Home() {
     try {
       
       const response = await api.post('/auth', {email, password});
-      localStorage.setItem('token', JSON.stringify(response.data.token));
-      
      
+      
+      api.defaults.headers.authorization = `Bearer ${response.data.token}`;
       Cookies.set('token', String(`Bearer ${response.data.token}`));
       
       
@@ -30,7 +31,11 @@ export default function Home() {
      
     } catch (error) {
       console.error(error);
-      
+      Notification({
+        type:'error',
+        description:'Email ou senha incorretos', 
+        title:'Erro no login'
+      })
     }
     
 

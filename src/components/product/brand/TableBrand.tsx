@@ -36,7 +36,7 @@ export function TableBrand(){
   const {brands} = useContext(BrandContext)
   
   return(
-    <Table columns={columns} dataSource={brands} />
+    <Table columns={columns} dataSource={brands} rowKey={'id'} />
   )
 
 }

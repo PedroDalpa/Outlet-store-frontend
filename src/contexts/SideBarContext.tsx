@@ -2,8 +2,10 @@ import {
   createContext, ReactNode, 
 } from 'react';
 
+import { useRouter } from 'next/router'
 
-import { SideBar } from '../components/Sidebar';
+
+import { Sidebar } from '../components/SideBar/Sidebar';
 
 
 
@@ -19,16 +21,21 @@ export function SideBarProvider({
 }: SideBarProviderProps) {
  
 
- 
+  const router = useRouter();
+  const pathname = router.pathname
+
+  const showSideBar = pathname === '/' ? 'none':''
+  
   
   return (
+    
     <SideBarContext.Provider value={{
       
-     
     }}
     >
-      { children }
-      <SideBar />
+       <Sidebar screen={children} display={showSideBar}/> 
+  
+      
      
     </SideBarContext.Provider>
   );

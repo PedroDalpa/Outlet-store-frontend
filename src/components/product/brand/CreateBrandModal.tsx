@@ -7,11 +7,9 @@ import Cookies from 'js-cookie';
 import global from '../../../styles/components/GlobalModal.module.css';
 
 import styles from '../../../styles/components/product/brand/CreateBrandModal.module.css';
-import { notification } from 'antd';
-interface notificationType {
-  type: 'success' | 'error'
-  description: string
-}
+
+import { Notification } from '../../Notification';
+
 const defaultErrorMessage = 'ocorreu um erro ao cadastrar a marca, tente novamente';
 const token = Cookies.get('token');
 export function CreateBrandModal(){
@@ -20,13 +18,7 @@ export function CreateBrandModal(){
   
   
   const {closeCreateBrandModal, brands} = useContext(BrandContext);
-  const openNotificationWithIcon = (notificationBody:notificationType) => {
-    notification[notificationBody.type]({
-      message: 'Notification Title',
-      description:
-        notificationBody.description,
-    });
-  };
+ 
 
   async function createBrand(){
     
@@ -34,25 +26,27 @@ export function CreateBrandModal(){
       const response = await api.post('/product/brand',{name},{ headers: 
         { authorization: token }
       });
-      openNotificationWithIcon({
+      Notification({
         type: 'success', 
-        description:'sucesso ao cadastrar marca'
+        title: 'Marca cadastrada com sucesso',
+        description:'sucesso ao cadastrar marca',
+
       })
       closeCreateBrandModal()
      
      
       
       brands.push(response.data)
-      
-      
+        
       
     } catch (error) {
       
       const response = error.response.data.message;
       const message = response === undefined ? defaultErrorMessage : response;
-      openNotificationWithIcon({
+      Notification({
         type: 'error', 
-        description: message
+        description: message,
+        title: 'Erro ao cadastrar uma marca',
       });
     }
     

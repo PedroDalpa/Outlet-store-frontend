@@ -1,12 +1,16 @@
 import '../styles/global.css';
 import 'antd/dist/antd.css';
-import { BrandProvider } from '../contexts/product/BrandContext';
+
+import { SideBarProvider } from '../contexts/SideBarContext';
 
 function MyApp({ Component, pageProps }) {
   
   return (
+    <SideBarProvider>
+      
     
       <Component {...pageProps} />
+    </SideBarProvider>
    
   );
 }
