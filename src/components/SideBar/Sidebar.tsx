@@ -1,10 +1,12 @@
 
 import { Layout, Menu } from 'antd';
 
-import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { RightOutlined, LoginOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import { FaTshirt } from 'react-icons/fa';
+import {GoGraph} from 'react-icons/go'
+import 'antd/dist/antd.css';
 
 
 const { Sider, Content, Footer } = Layout;
@@ -12,29 +14,31 @@ const {SubMenu} = Menu;
 
 interface SidebarProps {
   screen: ReactNode;
-  display: '' | 'none'; 
+  display: boolean; 
 }
 
 
 export function Sidebar(props:SidebarProps){
   return (
-    
+    <>
+    {props.display ? (
       <Layout >
     <Sider
       breakpoint="lg"
       collapsedWidth="0"
       onBreakpoint={broken => {
-        console.log(broken);
+       
       }}
       onCollapse={(collapsed, type) => {
-        console.log(collapsed, type);
+        
       }}
-      style={{height:'100vh', display:`${props.display}`}}
+      style={{height:'100vh'}}
+      
     >
     
-      <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']}>
+      <Menu theme="dark" mode="inline" defaultSelectedKeys={['dashboard']} >
       
-        <Menu.Item key="dashboard" icon={<VideoCameraOutlined />}>
+        <Menu.Item key="dashboard" icon={<GoGraph />}>
           <Link href='/dashboard'>
             dashboard
           </Link>
@@ -48,21 +52,23 @@ export function Sidebar(props:SidebarProps){
             </span>
          }
         >
-          <Menu.Item  key="productBrand" icon={<UserOutlined />}>
+          <Menu.Item  key="productBrand" icon={<RightOutlined />}>
             
             <Link href='/product/brand'>
               Marcas
             </Link>
             
           </Menu.Item>
+          <Menu.Item  key="productCategory" icon={<RightOutlined />}>
+            
+            <Link href='/product/category'>
+              Categoria
+            </Link>
+            
+          </Menu.Item>
         </SubMenu>
-        <Menu.Item key="3" icon={<UploadOutlined />}>
-          nav 3
-        </Menu.Item>
-        <Menu.Item key="4" icon={<UserOutlined />}>
-          nav 4
-        </Menu.Item>
-        <Menu.Item  key="logout" icon={<UserOutlined />}>
+       
+        <Menu.Item  key="logout" icon={<LoginOutlined />}>
             
           <Link href='/'>
             Sair
@@ -71,16 +77,22 @@ export function Sidebar(props:SidebarProps){
         </Menu.Item>
       </Menu>
     </Sider>
-    <Layout>
+    <Layout >
      
       <Content style={{ margin: '24px 16px 0' }}>
-        <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
+        <div  style={{ padding: 24, minHeight: 360 }}>
           {props.screen}
         </div>
       </Content>
-      <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+     
     </Layout>
   </Layout>
+  ):(
+    <>
+    {props.screen}
+    </>
+  )}
+  </>
    
     
   )

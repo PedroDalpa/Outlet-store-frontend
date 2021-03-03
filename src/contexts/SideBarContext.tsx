@@ -24,7 +24,7 @@ export function SideBarProvider({
   const router = useRouter();
   const pathname = router.pathname
 
-  const showSideBar = pathname === '/' ? 'none':''
+  const showSideBar = pathname === '/' ? false:true
   
   
   return (

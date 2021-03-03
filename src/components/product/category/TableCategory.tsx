@@ -3,8 +3,9 @@ import { Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useContext } from 'react';
 import { BrandContext } from '../../../contexts/product/BrandContext';
+import { CategoryContext } from '../../../contexts/product/CategoryContext';
 
-const columns: ColumnsType<Brands> = [
+const columns: ColumnsType<Categorys> = [
   {
     key: 'id',
     title: 'ID',
@@ -25,7 +26,7 @@ const columns: ColumnsType<Brands> = [
 ];
 
 
-interface Brands{
+interface Categorys{
   id:string;
   name:string;
   created: string;
@@ -33,11 +34,13 @@ interface Brands{
 
 
 
-export function TableBrand(){
-  const {brands} = useContext(BrandContext)
+export function CategoryTable(){
+  const {categorys} = useContext(CategoryContext)
+  console.log();
+  
   
   return(
-    <Table columns={columns} dataSource={brands} rowKey={'id'} />
+    <Table columns={columns} dataSource={categorys} rowKey={'id'} />
   )
 
 }

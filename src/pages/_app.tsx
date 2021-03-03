@@ -1,5 +1,5 @@
 import '../styles/global.css';
-import 'antd/dist/antd.css';
+
 
 import { SideBarProvider } from '../contexts/SideBarContext';
 

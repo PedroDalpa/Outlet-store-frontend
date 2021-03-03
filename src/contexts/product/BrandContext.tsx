@@ -25,11 +25,6 @@ interface Brands {
   created: string;
 }
 
-interface BrandTable{
-  itens: Brands[]
-}
-
-
 export const BrandContext = createContext({} as BrandContextData);
 
 export function BrandProvider({

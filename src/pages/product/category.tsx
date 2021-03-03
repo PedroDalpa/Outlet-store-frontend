@@ -1,43 +1,43 @@
 import styles from '../../styles/pages/product/Brand.module.css';
 
 
-import {  BrandProvider } from '../../contexts/product/BrandContext';
-import { CreateButton } from "../../components/product/brand/CreateButton";
+
+import { CreateButton } from "../../components/product/category/CreateButton";
 import { GetServerSideProps } from "next";
 import api from "../../services/api";
-import { TableBrand } from "../../components/product/brand/TableBrand";
+
+import { CategoryProvider } from '../../contexts/product/CategoryContext';
+import { CategoryTable } from '../../components/product/category/TableCategory'
 
 
 
-interface Brands {
+interface Categorys {
   id:string;
   name:string;
   created: string;
 }
 
-interface BrandTable{
-  itens: Brands[]
+interface CategoryTable{
+  itens: Categorys[]
 }
 
 
 
-export default function Brands(props:BrandTable) {
+export default function Category(props:CategoryTable) {
  
-   
-    
   return (
    
-    <BrandProvider itens={props.itens} >
+    <CategoryProvider itens={props.itens} >
       <div className={styles.container} >
         
         <CreateButton />
            
         <div className={styles.table}>
-          <TableBrand />
+          <CategoryTable />
         </div>
         
       </div>
-    </BrandProvider>
+    </CategoryProvider>
     
    
   );
@@ -46,12 +46,12 @@ export default function Brands(props:BrandTable) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const {token} = context.req.cookies;
-
+  
   try {
-
-    const {data} = await api.get('product/brand', { headers: 
+    const {data} = await api.get('product/category', { headers: 
       { authorization: token }
-    });
+    })
+    console.log(data);
     
     return {
       props: {
@@ -61,7 +61,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     
 
   } catch (error) {
-    // console.error(error);
+    console.error(error);
     return {
       props: {
         itens: [{id:'',name:'', created:''}]
