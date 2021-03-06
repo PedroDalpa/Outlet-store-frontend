@@ -72,6 +72,11 @@ export function Sidebar(props:SidebarProps){
               SubCategoria
             </Link>
           </Menu.Item>
+          <Menu.Item  key="productProvider" icon={<RightOutlined />}>
+            <Link href='/product/provider'>
+              Fornecedor
+            </Link>
+          </Menu.Item>
         </SubMenu>
        
         <Menu.Item  key="logout" icon={<LoginOutlined />}>
