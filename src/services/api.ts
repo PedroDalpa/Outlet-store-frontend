@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 const token = Cookies.get('token');
-console.log(token,'token api');
+
 
 
 const api =  axios.create({
@@ -11,5 +11,4 @@ const api =  axios.create({
   },
 })
 
-console.log(api.defaults.headers,' api');
  export default api;

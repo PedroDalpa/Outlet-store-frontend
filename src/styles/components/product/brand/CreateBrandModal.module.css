@@ -1,6 +1,7 @@
 .inputs {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  justify-content: space-evenly;
   width: 100%;
 }
 
@@ -10,6 +11,15 @@
 
 .form input {
   height: 3rem;
+  width: 95%;
+}
+
+.form select {
+  width: 95%;
+}
+
+.form select option:hover {
+  background: red !important;
 }
 
 .form footer {

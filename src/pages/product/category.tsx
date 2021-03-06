@@ -50,9 +50,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const {data} = await api.get('product/category', { headers: 
       { authorization: token }
-    })
-    console.log(data);
-    
+    });
+        
     return {
       props: {
         itens: data

@@ -1,43 +1,41 @@
 import styles from '../../styles/pages/product/Brand.module.css';
 
 
-import {  BrandProvider } from '../../contexts/product/BrandContext';
-import { CreateButton } from "../../components/product/brand/CreateButton";
+
+import { CreateButton } from "../../components/product/subcategory/CreateButton";
 import { GetServerSideProps } from "next";
 import api from "../../services/api";
-import { TableBrand } from "../../components/product/brand/TableBrand";
+
+import { SubCategoryProvider } from '../../contexts/product/SubCategoryContext';
+import { SubCategoryTable } from '../../components/product/subcategory/SubCategoryTable'
 
 
 
-interface Brands {
+interface SubCategory {
   id:string;
   name:string;
   created: string;
 }
 
-interface BrandTable{
-  itens: Brands[]
+interface ISubCategoryTable{
+  itens: SubCategory[]
 }
 
-
-
-export default function Brands(props:BrandTable) {
+export default function SubCategory(props:ISubCategoryTable) {
  
-   
-    
   return (
    
-    <BrandProvider itens={props.itens} >
+    <SubCategoryProvider itens={props.itens} >
       <div className={styles.container} >
         
         <CreateButton />
            
         <div className={styles.table}>
-          <TableBrand />
+          <SubCategoryTable />
         </div>
         
       </div>
-    </BrandProvider>
+    </SubCategoryProvider>
     
    
   );
@@ -46,13 +44,12 @@ export default function Brands(props:BrandTable) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const {token} = context.req.cookies;
-
+  
   try {
-
-    const {data} = await api.get('product/brand', { headers: 
+    const {data} = await api.get('product/sub/category', { headers: 
       { authorization: token }
     });
-    
+        
     return {
       props: {
         itens: data

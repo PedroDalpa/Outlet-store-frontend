@@ -1,43 +1,49 @@
 
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import api from '../../../services/api';
-import Cookies from 'js-cookie';
+
 
 import global from '../../../styles/components/GlobalModal.module.css';
 
 import styles from '../../../styles/components/product/brand/CreateBrandModal.module.css';
 
 import { Notification } from '../../Notification';
-import { CategoryContext } from '../../../contexts/product/CategoryContext';
-
+import { SubCategoryContext } from '../../../contexts/product/SubCategoryContext';
+import { 
+ Select, 
+} from 'antd';
+const Option = Select.Option;
 const defaultErrorMessage = 'ocorreu um erro ao cadastrar a marca, tente novamente';
-const token = Cookies.get('token');
-export function CreateCategoryModal(){
-  const [name, setName] = useState('');
 
+export function CreateSubCategoryModal(){
+  const [name, setName] = useState('');
+  const [categories, setCategories] = useState([{
+    id:'',
+    name:''
+  }])
+
+  const [productCategory, setProductCategory] = useState(null)
   
   
-  const {closeCreateCategoryModal, categorys} = useContext(CategoryContext);
+  const {closeCreateSubCategoryModal, subCategorys} = useContext(SubCategoryContext);
  
 
-  async function createCategory(){
+  async function createSubCategory(){
     
     try {
-      const response = await api.post('/product/category',{name},{ headers: 
-        { authorization: token }
-      });
+      const response = await api.post('/product/sub/category', {name, productCategory});
       Notification({
         type: 'success', 
         title: 'Marca cadastrada com sucesso',
         description:'sucesso ao cadastrar marca',
 
       })
-      closeCreateCategoryModal()
+      closeCreateSubCategoryModal()
      
      
       
-      categorys.push(response.data)
+      subCategorys.push(response.data)
         
       
     } catch (error) {
@@ -51,15 +57,21 @@ export function CreateCategoryModal(){
       });
     }
     
-    
   }
+
+  useEffect(() => {
+    api.get('/product/category', {})
+      .then((response) => {
+        setCategories(response.data);
+      });
+  }, []);
  
   
   return(
     <div className={global.overlay}>
       <div className={global.container}>
         <header>
-          Criar Categoria
+          Criar SubCategoria
         </header>
         <hr/>
         <form className={styles.form}>
@@ -69,10 +81,34 @@ export function CreateCategoryModal(){
               <label >Nome:</label>
 
               <input 
-                placeholder="Nome da marca"
+                placeholder="Nome da subcategoria"
                 value={name}
                 onChange={e => setName(e.target.value)}
                 />
+            </p>
+            <p>
+              <div style={{display:'grid',gridTemplateColumns:'1fr'}}>
+              <label >Nome:</label>
+              <Select
+                showSearch
+                placeholder="Selecione"
+                size="large"
+                onChange={e=>{setProductCategory(e)}}
+            
+              >
+                
+                {categories.map((option) => {
+                  return (
+                    <>
+                      <Option key={option.id} value={option.id}>
+                        {option.name}
+                      </Option>
+                    </>
+                   );
+                })} 
+              </Select>
+              </div>
+            
             </p>
           </div> 
           <hr/>
@@ -80,14 +116,14 @@ export function CreateCategoryModal(){
             <button
               type="button"
               className={styles.cancelButton}
-              onClick={closeCreateCategoryModal}
+              onClick={closeCreateSubCategoryModal}
             >
               cancelar
             </button>
             <button
               type="button"
               className={styles.createButton}
-              onClick={createCategory}
+              onClick={createSubCategory}
               >
               Cadastrar
             </button>
@@ -97,7 +133,7 @@ export function CreateCategoryModal(){
         </form>
         <button 
           type="button"
-          onClick={closeCreateCategoryModal}
+          onClick={closeCreateSubCategoryModal}
           >
           <img src="/icons/close.svg" alt="Fechar Modal"/>
         </button>

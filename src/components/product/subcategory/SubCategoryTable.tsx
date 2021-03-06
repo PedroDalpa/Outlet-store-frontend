@@ -2,10 +2,9 @@
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useContext } from 'react';
-import { BrandContext } from '../../../contexts/product/BrandContext';
-import { CategoryContext } from '../../../contexts/product/CategoryContext';
+import { SubCategoryContext } from '../../../contexts/product/SubCategoryContext';
 
-const columns: ColumnsType<Categorys> = [
+const columns: ColumnsType<SubCategorys> = [
   {
     key: 'id',
     title: 'ID',
@@ -18,6 +17,11 @@ const columns: ColumnsType<Categorys> = [
     dataIndex: 'name',
   },
   {
+    key: 'categoryName',
+    title: 'Categoria',
+    dataIndex: 'categoryName',
+  },
+  {
     key: 'created',
     title: 'Criado em:',
     dataIndex: 'create_at',
@@ -26,7 +30,7 @@ const columns: ColumnsType<Categorys> = [
 ];
 
 
-interface Categorys{
+interface SubCategorys{
   id:string;
   name:string;
   created: string;
@@ -34,11 +38,11 @@ interface Categorys{
 
 
 
-export function CategoryTable(){
-  const {categorys} = useContext(CategoryContext) 
+export function SubCategoryTable(){
+  const {subCategorys} = useContext(SubCategoryContext)  
   
   return(
-    <Table columns={columns} dataSource={categorys} rowKey={'id'} />
+    <Table columns={columns} dataSource={subCategorys} rowKey={'id'} />
   )
 
 }

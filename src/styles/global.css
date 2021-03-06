@@ -34,7 +34,7 @@ body {
   background: #010b13 !important;
 }
 
-body, input, textarea, button {
+body, input, textarea, button, option, select {
   font: 400 1rem "Inter", sans-serif
 }
 
