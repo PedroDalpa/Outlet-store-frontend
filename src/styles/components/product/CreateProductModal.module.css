@@ -1,0 +1,56 @@
+.inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.form>div {
+  padding: 1rem 1rem 0 1rem;
+}
+
+.form input {
+  height: 3rem;
+  width: 95%;
+}
+
+.form select {
+  width: 95%;
+}
+
+.form select option:hover {
+  background: red !important;
+}
+
+.form footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form footer button {
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 5px;
+  color: var(--white);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: filter 0.2s;
+  width: 6rem;
+  margin-top: 1rem;
+}
+
+.form footer button.cancelButton {
+  background: var(--red);
+  margin-right: 1rem;
+}
+
+.form footer button.createButton {
+  background: var(--green);
+}
+
+.form footer button:hover {
+  filter: brightness(0.92);
+}
