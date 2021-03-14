@@ -1,8 +1,7 @@
-
 import { useContext, useState } from 'react';
+import Cookies from 'js-cookie';
 import { BrandContext } from '../../../contexts/product/BrandContext';
 import api from '../../../services/api';
-import Cookies from 'js-cookie';
 
 import global from '../../../styles/components/GlobalModal.module.css';
 
@@ -12,69 +11,58 @@ import { Notification } from '../../Notification';
 
 const defaultErrorMessage = 'ocorreu um erro ao cadastrar a marca, tente novamente';
 const token = Cookies.get('token');
-export function CreateBrandModal(){
+export function CreateBrandModal() {
   const [name, setName] = useState('');
 
-  
-  
-  const {closeCreateBrandModal, brands} = useContext(BrandContext);
- 
+  const { closeCreateBrandModal, brands } = useContext(BrandContext);
 
-  async function createBrand(){
-    
+  async function createBrand() {
     try {
-      const response = await api.post('/product/brand',{name},{ headers: 
-        { authorization: token }
+      const response = await api.post('/product/brand', { name }, {
+        headers:
+        { authorization: token },
       });
       Notification({
-        type: 'success', 
+        type: 'success',
         title: 'Marca cadastrada com sucesso',
-        description:'sucesso ao cadastrar marca',
+        description: 'sucesso ao cadastrar marca',
 
-      })
-      closeCreateBrandModal()
-     
-     
-      
-      brands.push(response.data)
-        
-      
+      });
+      closeCreateBrandModal();
+
+      brands.push(response.data);
     } catch (error) {
-      
       const response = error.response.data.message;
       const message = response === undefined ? defaultErrorMessage : response;
       Notification({
-        type: 'error', 
+        type: 'error',
         description: message,
         title: 'Erro ao cadastrar uma marca',
       });
     }
-    
-    
   }
- 
-  
-  return(
+
+  return (
     <div className={global.overlay}>
       <div className={global.container}>
         <header>
           Criar Marca
         </header>
-        <hr/>
+        <hr />
         <form className={styles.form}>
-         
+
           <div className={styles.inputs}>
             <p>
-              <label >Nome:</label>
+              <label>Nome:</label>
 
-              <input 
+              <input
                 placeholder="Nome da marca"
                 value={name}
-                onChange={e => setName(e.target.value)}
-                />
+                onChange={(e) => setName(e.target.value)}
+              />
             </p>
-          </div> 
-          <hr/>
+          </div>
+          <hr />
           <footer>
             <button
               type="button"
@@ -87,20 +75,19 @@ export function CreateBrandModal(){
               type="button"
               className={styles.createButton}
               onClick={createBrand}
-              >
+            >
               Cadastrar
             </button>
           </footer>
 
-         
         </form>
-        <button 
+        <button
           type="button"
           onClick={closeCreateBrandModal}
-          >
-          <img src="/icons/close.svg" alt="Fechar Modal"/>
+        >
+          <img src="/icons/close.svg" alt="Fechar Modal" />
         </button>
       </div>
     </div>
-  )
+  );
 }

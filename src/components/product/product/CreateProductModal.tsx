@@ -1,8 +1,21 @@
-
+/* eslint-disable react/jsx-props-no-multi-spaces */
+/* eslint-disable max-len */
 import { useContext, useEffect, useState } from 'react';
 
-import api from '../../../services/api';
+import {
+  Button,
+  Divider,
+  Row,
+  Select,
+  Form,
+  Col,
+} from 'antd';
+import {
 
+  PlusOutlined,
+  MinusCircleOutlined,
+} from '@ant-design/icons';
+import api from '../../../services/api';
 
 import global from '../../../styles/components/GlobalModal.module.css';
 
@@ -10,73 +23,58 @@ import styles from '../../../styles/components/product/CreateProductModal.module
 
 import { Notification } from '../../Notification';
 import { ProductContext } from '../../../contexts/product/ProductContext';
-import { 
-  Button,
-  Divider,
-  Row,
- Select, 
- Form,
- Col
-} from 'antd';
-import {
 
-  PlusOutlined,
-  MinusCircleOutlined
-} from '@ant-design/icons';
-const Option = Select.Option;
+const { Option } = Select;
 const defaultErrorMessage = 'ocorreu um erro ao cadastrar a produto, tente novamente';
 
-export function CreateProductModal(){
+export function CreateProductModal() {
   const [name, setName] = useState('');
-  
-  
-  const {closeCreateProductModal} = useContext(ProductContext);
- 
 
-  async function createProduct(){
-    
+  const { closeCreateProductModal } = useContext(ProductContext);
+  const [productProviders, setProductProviders] = useState([
+    { productProvider: '' },
+  ]);
+  const [productBrandId, setProductBrandId] = useState(null);
+  const [productSubCategoryId, setProductSubCategoryId] = useState(null);
+
+  async function createProduct() {
     try {
       const response = await api.post('/product', {
         name,
         productProviders,
-        productBrandId, 
-        productSubCategoryId
+        productBrandId,
+        productSubCategoryId,
       });
       Notification({
-        type: 'success', 
+        type: 'success',
         title: 'Produto adicionado com sucesso',
-        description:'sucesso ao cadastrar marca',
+        description: 'sucesso ao cadastrar marca',
 
-      })
-      closeCreateProductModal();       
-      
+      });
+      closeCreateProductModal();
     } catch (error) {
-      
       const response = error.response.data.message;
       const message = response === undefined ? defaultErrorMessage : response;
       Notification({
-        type: 'error', 
+        type: 'error',
         description: message,
         title: 'Erro ao cadastrar uma marca',
       });
     }
-    
   }
 
   const [subCategories, setSubCategories] = useState([{
-    id:'',
-    name:''
-  }])
+    id: '',
+    name: '',
+  }]);
   const [brands, setBrands] = useState([{
-    id:'',
-    name:''
-  }])
+    id: '',
+    name: '',
+  }]);
   const [providers, setProviders] = useState([{
-    id:'',
-    name:''
-  }])
-  const [productBrandId,setProductBrandId] = useState(null)
-  const [productSubCategoryId,setProductSubCategoryId] = useState(null)
+    id: '',
+    name: '',
+  }]);
 
   useEffect(() => {
     api.get('/product/sub/category', {})
@@ -93,179 +91,148 @@ export function CreateProductModal(){
       });
   }, []);
 
-
-  const [productProviders, setProductProviders] = useState([
-    { productProvider:'' },
-  ]);
-
   const handleAddClick = (e, index) => {
     e.preventDefault();
-    
 
     setProductProviders([
       ...productProviders,
       {
-        productProvider:''
+        productProvider: '',
       },
     ]);
   };
 
   const handleRemoveClick = (index) => {
     const list = [...productProviders];
-    console.log(index,list);
-    
+    console.log(index, list);
+
     list.splice(index, 1);
     setProductProviders(list);
   };
 
   function HandleChange(e, index) {
-    var NewArray = [...productProviders];
-    console.log(index,e, 'change');
-    
+    const NewArray = [...productProviders];
+    console.log(index, e, 'change');
+
     NewArray[index].productProvider = e;
 
     setProductProviders(NewArray);
   }
- 
-  
-  return(
+
+  return (
     <div className={global.overlay}>
       <div className={global.container}>
         <header>
           Cadastrar produto
         </header>
-        <hr/>
+        <hr />
         <form className={styles.form}>
-         
+
           <div className={styles.inputs}>
             <p>
-              <label >Nome:</label>
+              <label>Nome:</label>
 
-              <input 
+              <input
                 placeholder="Nome do produto"
                 value={name}
-                onChange={e => setName(e.target.value)}
-                />
+                onChange={(e) => setName(e.target.value)}
+              />
             </p>
             <p>
-              <div style={{display:'grid',gridTemplateColumns:'1fr'}}>
-              <label>Marca do produto:</label>
-              <Select
-                showSearch
-                placeholder="Selecione"
-                size="large"
-                onChange={e=>{setProductBrandId(e);
-                }}
-               
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                }
-                filterSort={(optionA, optionB) =>
-                  optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
-                }
-            
-              >
-                
-                {brands.map((option) => {
-                  return (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
+                <label>Marca do produto:</label>
+                <Select
+                  showSearch
+                  placeholder="Selecione"
+                  size="large"
+                  onChange={(e) => {
+                    setProductBrandId(e);
+                  }}
+
+                  filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  filterSort={(optionA, optionB) => optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())}
+                >
+
+                  {brands.map((option) => (
                     <>
                       <Option key={option.id} value={option.id}>
                         {option.name}
                       </Option>
                     </>
-                   );
-                })} 
-              </Select>
+                  ))}
+                </Select>
               </div>
-            
+
             </p>
             <p>
-              <div style={{display:'grid',gridTemplateColumns:'1fr', width:'95%'}}>
-              <label >SubCategoria:</label>
-              <Select
-                showSearch
-                placeholder="Selecione"
-                size="large"
-                onChange={e=>{setProductSubCategoryId(e);
-                }}
-                  
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                }
-                filterSort={(optionA, optionB) =>
-                  optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
-                }
-            
-              >
-                
-                {subCategories.map((option) => {
-                  return (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', width: '95%' }}>
+                <label>SubCategoria:</label>
+                <Select
+                  showSearch
+                  placeholder="Selecione"
+                  size="large"
+                  onChange={(e) => {
+                    setProductSubCategoryId(e);
+                  }}
+
+                  filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  filterSort={(optionA, optionB) => optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())}
+                >
+
+                  {subCategories.map((option) => (
                     <>
                       <Option key={option.id} value={option.id}>
                         {option.name}
                       </Option>
                     </>
-                   );
-                })} 
-              </Select>
+                  ))}
+                </Select>
               </div>
-            
+
             </p>
 
-            
-            
-          </div> 
-          <Divider/>
-          {productProviders.map((selectedProvider, index) => {
-            return (
-              <>
+          </div>
+          <Divider />
+          {productProviders.map((selectedProvider, index) => (
+            <>
               <Row>
 
-              <Col span={24}>
-                <Form.Item
-                  labelCol={{ span: 23 }}
-                  label="Fornecedor:"
-                  labelAlign={'left'}
-                >
-                  <Select
-                    showSearch
-                    placeholder="Selecione"
-                    size="large"
-                    onChange={e => { HandleChange(e,index) }}
-                    value={selectedProvider.productProvider}
-                    
-                      
-                    filterOption={(input, option) =>
-                      option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                    }
-                    filterSort={(optionA, optionB) =>
-                      optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
-                    }
-                    style={{width:'95%', marginRight:'1rem'}}
-                    
-                
+                <Col span={24}>
+                  <Form.Item
+                    labelCol={{ span: 23 }}
+                    label="Fornecedor:"
+                    labelAlign="left"
                   >
-                    
-                    {providers.map((option) => {
-                      return (
+                    <Select
+                      showSearch
+                      placeholder="Selecione"
+                      size="large"
+                      onChange={(e) => { HandleChange(e, index); }}
+                      value={selectedProvider.productProvider}
+
+                      filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                      // eslint-disable-next-line max-len
+                      filterSort={(optionA, optionB) => optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())}
+                      style={{ width: '95%', marginRight: '1rem' }}
+                    >
+
+                      {providers.map((option) => (
                         <>
                           <Option key={option.id} value={option.id}>
                             {option.name}
                           </Option>
                         </>
-                      );
-                    })} 
-                  </Select>
-                  {productProviders.length !== 1 && (
-                    <MinusCircleOutlined
-                    onClick={() => handleRemoveClick(index)}
-                    style={{height:'1px'}}
-                    />
+                      ))}
+                    </Select>
+                    {productProviders.length !== 1 && (
+                      <MinusCircleOutlined
+                        onClick={() => handleRemoveClick(index)}
+                        style={{ height: '1px' }}
+                      />
                     )}
-                </Form.Item>
+                  </Form.Item>
                 </Col>
-                         
-                
+
                 {productProviders.length - 1 === index && (
                   <Button
                     key="primary"
@@ -278,12 +245,11 @@ export function CreateProductModal(){
                   </Button>
                 )}
                 <Divider />
-                </Row>
-              </>
-            );
-          })}
-         
-          <hr/>
+              </Row>
+            </>
+          ))}
+
+          <hr />
           <footer>
             <button
               type="button"
@@ -296,20 +262,19 @@ export function CreateProductModal(){
               type="button"
               className={styles.createButton}
               onClick={createProduct}
-              >
+            >
               Cadastrar
             </button>
           </footer>
 
-         
         </form>
-        <button 
+        <button
           type="button"
           onClick={closeCreateProductModal}
-          >
-          <img src="/icons/close.svg" alt="Fechar Modal"/>
+        >
+          <img src="/icons/close.svg" alt="Fechar Modal" />
         </button>
       </div>
     </div>
-  )
+  );
 }

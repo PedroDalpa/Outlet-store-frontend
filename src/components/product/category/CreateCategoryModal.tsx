@@ -1,8 +1,7 @@
-
 import { useContext, useState } from 'react';
 
-import api from '../../../services/api';
 import Cookies from 'js-cookie';
+import api from '../../../services/api';
 
 import global from '../../../styles/components/GlobalModal.module.css';
 
@@ -13,69 +12,58 @@ import { CategoryContext } from '../../../contexts/product/CategoryContext';
 
 const defaultErrorMessage = 'ocorreu um erro ao cadastrar a marca, tente novamente';
 const token = Cookies.get('token');
-export function CreateCategoryModal(){
+export function CreateCategoryModal() {
   const [name, setName] = useState('');
 
-  
-  
-  const {closeCreateCategoryModal, categorys} = useContext(CategoryContext);
- 
+  const { closeCreateCategoryModal, categorys } = useContext(CategoryContext);
 
-  async function createCategory(){
-    
+  async function createCategory() {
     try {
-      const response = await api.post('/product/category',{name},{ headers: 
-        { authorization: token }
+      const response = await api.post('/product/category', { name }, {
+        headers:
+        { authorization: token },
       });
       Notification({
-        type: 'success', 
+        type: 'success',
         title: 'Marca cadastrada com sucesso',
-        description:'sucesso ao cadastrar marca',
+        description: 'sucesso ao cadastrar marca',
 
-      })
-      closeCreateCategoryModal()
-     
-     
-      
-      categorys.push(response.data)
-        
-      
+      });
+      closeCreateCategoryModal();
+
+      categorys.push(response.data);
     } catch (error) {
-      
       const response = error.response.data.message;
       const message = response === undefined ? defaultErrorMessage : response;
       Notification({
-        type: 'error', 
+        type: 'error',
         description: message,
         title: 'Erro ao cadastrar uma marca',
       });
     }
-    
-    
   }
- 
-  
-  return(
+
+  return (
     <div className={global.overlay}>
       <div className={global.container}>
         <header>
           Criar Categoria
         </header>
-        <hr/>
+        <hr />
         <form className={styles.form}>
-         
+
           <div className={styles.inputs}>
             <p>
-              <label >Nome:</label>
+              <label>Nome:</label>
 
-              <input 
+              <input
                 placeholder="Nome da marca"
                 value={name}
-                onChange={e => setName(e.target.value)}
-                />
+                onChange={(e) => setName(e.target.value)}
+              />
             </p>
-          </div> 
-          <hr/>
+          </div>
+          <hr />
           <footer>
             <button
               type="button"
@@ -88,20 +76,19 @@ export function CreateCategoryModal(){
               type="button"
               className={styles.createButton}
               onClick={createCategory}
-              >
+            >
               Cadastrar
             </button>
           </footer>
 
-         
         </form>
-        <button 
+        <button
           type="button"
           onClick={closeCreateCategoryModal}
-          >
-          <img src="/icons/close.svg" alt="Fechar Modal"/>
+        >
+          <img src="/icons/close.svg" alt="Fechar Modal" />
         </button>
       </div>
     </div>
-  )
+  );
 }

@@ -1,8 +1,9 @@
-
 import { useContext, useEffect, useState } from 'react';
 
+import {
+  Select,
+} from 'antd';
 import api from '../../../services/api';
-
 
 import global from '../../../styles/components/GlobalModal.module.css';
 
@@ -10,88 +11,78 @@ import styles from '../../../styles/components/product/brand/CreateBrandModal.mo
 
 import { Notification } from '../../Notification';
 import { ProviderContext } from '../../../contexts/product/ProviderContext';
-import { 
- Select, 
-} from 'antd';
-const Option = Select.Option;
+
+const { Option } = Select;
 const defaultErrorMessage = 'ocorreu um erro ao cadastrar a marca, tente novamente';
 
-export function CreateProviderModal(){
+export function CreateProviderModal() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  
-  const {closeCreateProviderModal, providers} = useContext(ProviderContext);
- 
 
-  async function createProvider(){
-    
+  const { closeCreateProviderModal, providers } = useContext(ProviderContext);
+
+  async function createProvider() {
     try {
-      const response = await api.post('/product/provider', {name, phone, email});
+      const response = await api.post('/product/provider', { name, phone, email });
       Notification({
-        type: 'success', 
+        type: 'success',
         title: 'Fornecedor adicionado com sucesso',
-        description:'sucesso ao cadastrar marca',
+        description: 'sucesso ao cadastrar marca',
 
-      })
-      closeCreateProviderModal();       
-      
+      });
+      closeCreateProviderModal();
     } catch (error) {
-      
       const response = error.response.data.message;
       const message = response === undefined ? defaultErrorMessage : response;
       Notification({
-        type: 'error', 
+        type: 'error',
         description: message,
         title: 'Erro ao cadastrar uma marca',
       });
     }
-    
   }
 
-
- 
-  
-  return(
+  return (
     <div className={global.overlay}>
       <div className={global.container}>
         <header>
           adicionar fornecedor
         </header>
-        <hr/>
+        <hr />
         <form className={styles.form}>
-         
+
           <div className={styles.inputs}>
             <p>
-              <label >Nome:</label>
+              <label>Nome:</label>
 
-              <input 
+              <input
                 placeholder="Nome do fornecedor"
                 value={name}
-                onChange={e => setName(e.target.value)}
-                />
+                onChange={(e) => setName(e.target.value)}
+              />
             </p>
             <p>
-              <label >Telefone:</label>
+              <label>Telefone:</label>
 
-              <input 
+              <input
                 placeholder="Telefone do fornecedor"
                 value={phone}
-                onChange={e => setPhone(e.target.value)}
-                />
+                onChange={(e) => setPhone(e.target.value)}
+              />
             </p>
             <p>
-              <label >Email:</label>
+              <label>Email:</label>
 
-              <input 
+              <input
                 placeholder="Email do fornecedor"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
-                />
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </p>
-            
-          </div> 
-          <hr/>
+
+          </div>
+          <hr />
           <footer>
             <button
               type="button"
@@ -104,20 +95,19 @@ export function CreateProviderModal(){
               type="button"
               className={styles.createButton}
               onClick={createProvider}
-              >
+            >
               Cadastrar
             </button>
           </footer>
 
-         
         </form>
-        <button 
+        <button
           type="button"
           onClick={closeCreateProviderModal}
-          >
-          <img src="/icons/close.svg" alt="Fechar Modal"/>
+        >
+          <img src="/icons/close.svg" alt="Fechar Modal" />
         </button>
       </div>
     </div>
-  )
+  );
 }

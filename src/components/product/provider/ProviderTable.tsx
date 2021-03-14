@@ -1,15 +1,20 @@
-
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useContext } from 'react';
 import { ProviderContext } from '../../../contexts/product/ProviderContext';
+
+interface Providers{
+  id:string;
+  name:string;
+  created: string;
+}
 
 const columns: ColumnsType<Providers> = [
   {
     key: 'id',
     title: 'ID',
     dataIndex: 'id',
-    width:'20%'
+    width: '20%',
   },
   {
     key: 'name',
@@ -31,25 +36,13 @@ const columns: ColumnsType<Providers> = [
     title: 'Criado em:',
     dataIndex: 'create_at',
   },
- 
+
 ];
 
+export function ProviderTable() {
+  const { providers } = useContext(ProviderContext);
 
-interface Providers{
-  id:string;
-  name:string;
-  created: string;
+  return (
+    <Table columns={columns} dataSource={providers} rowKey="id" />
+  );
 }
-
-
-
-export function ProviderTable(){
-  const {providers} = useContext(ProviderContext)  
-  
-  return(
-    <Table columns={columns} dataSource={providers} rowKey={'id'} />
-  )
-
-}
-
-

@@ -1,4 +1,3 @@
-
 import { notification } from 'antd';
 
 interface notificationType {
@@ -7,12 +6,10 @@ interface notificationType {
   description: string;
 }
 
-export function Notification(notificationBody:notificationType){
-  
+export function Notification(notificationBody:notificationType) {
   notification[notificationBody.type]({
-      message: notificationBody.title,
-      description:
+    message: notificationBody.title,
+    description:
         notificationBody.description,
   });
-
 }

@@ -1,8 +1,10 @@
-
+/* eslint-disable max-len */
 import { useContext, useEffect, useState } from 'react';
 
+import {
+  Select,
+} from 'antd';
 import api from '../../../services/api';
-
 
 import global from '../../../styles/components/GlobalModal.module.css';
 
@@ -10,53 +12,42 @@ import styles from '../../../styles/components/product/brand/CreateBrandModal.mo
 
 import { Notification } from '../../Notification';
 import { SubCategoryContext } from '../../../contexts/product/SubCategoryContext';
-import { 
- Select, 
-} from 'antd';
-const Option = Select.Option;
+
+const { Option } = Select;
 const defaultErrorMessage = 'ocorreu um erro ao cadastrar a marca, tente novamente';
 
-export function CreateSubCategoryModal(){
+export function CreateSubCategoryModal() {
   const [name, setName] = useState('');
   const [categories, setCategories] = useState([{
-    id:'',
-    name:''
-  }])
+    id: '',
+    name: '',
+  }]);
 
-  const [productCategory, setProductCategory] = useState(null)
-  
-  
-  const {closeCreateSubCategoryModal, subCategorys} = useContext(SubCategoryContext);
- 
+  const [productCategory, setProductCategory] = useState(null);
 
-  async function createSubCategory(){
-    
+  const { closeCreateSubCategoryModal, subCategorys } = useContext(SubCategoryContext);
+
+  async function createSubCategory() {
     try {
-      const response = await api.post('/product/sub/category', {name, productCategory});
+      const response = await api.post('/product/sub/category', { name, productCategory });
       Notification({
-        type: 'success', 
+        type: 'success',
         title: 'Marca cadastrada com sucesso',
-        description:'sucesso ao cadastrar marca',
+        description: 'sucesso ao cadastrar marca',
 
-      })
-      closeCreateSubCategoryModal()
-     
-     
-      
-      subCategorys.push(response.data)
-        
-      
+      });
+      closeCreateSubCategoryModal();
+
+      subCategorys.push(response.data);
     } catch (error) {
-      
       const response = error.response.data.message;
       const message = response === undefined ? defaultErrorMessage : response;
       Notification({
-        type: 'error', 
+        type: 'error',
         description: message,
         title: 'Erro ao cadastrar uma marca',
       });
     }
-    
   }
 
   useEffect(() => {
@@ -65,59 +56,51 @@ export function CreateSubCategoryModal(){
         setCategories(response.data);
       });
   }, []);
- 
-  
-  return(
+
+  return (
     <div className={global.overlay}>
       <div className={global.container}>
         <header>
           Criar SubCategoria
         </header>
-        <hr/>
+        <hr />
         <form className={styles.form}>
-         
+
           <div className={styles.inputs}>
             <p>
-              <label >Nome:</label>
+              <label>Nome:</label>
 
-              <input 
+              <input
                 placeholder="Nome da subcategoria"
                 value={name}
-                onChange={e => setName(e.target.value)}
-                />
+                onChange={(e) => setName(e.target.value)}
+              />
             </p>
             <p>
-              <div style={{display:'grid',gridTemplateColumns:'1fr'}}>
-              <label >Nome:</label>
-              <Select
-                showSearch
-                placeholder="Selecione"
-                size="large"
-                onChange={e=>{setProductCategory(e)}}
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                }
-                filterSort={(optionA, optionB) =>
-                  optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
-                }
-            
-              >
-                
-                {categories.map((option) => {
-                  return (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
+                <label>Nome:</label>
+                <Select
+                  showSearch
+                  placeholder="Selecione"
+                  size="large"
+                  onChange={(e) => { setProductCategory(e); }}
+                  filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  filterSort={(optionA, optionB) => optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())}
+                >
+
+                  {categories.map((option) => (
                     <>
                       <Option key={option.id} value={option.id}>
                         {option.name}
                       </Option>
                     </>
-                   );
-                })} 
-              </Select>
+                  ))}
+                </Select>
               </div>
-            
+
             </p>
-          </div> 
-          <hr/>
+          </div>
+          <hr />
           <footer>
             <button
               type="button"
@@ -130,20 +113,19 @@ export function CreateSubCategoryModal(){
               type="button"
               className={styles.createButton}
               onClick={createSubCategory}
-              >
+            >
               Cadastrar
             </button>
           </footer>
 
-         
         </form>
-        <button 
+        <button
           type="button"
           onClick={closeCreateSubCategoryModal}
-          >
-          <img src="/icons/close.svg" alt="Fechar Modal"/>
+        >
+          <img src="/icons/close.svg" alt="Fechar Modal" />
         </button>
       </div>
     </div>
-  )
+  );
 }
