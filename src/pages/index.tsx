@@ -1,6 +1,6 @@
 
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie';
 
@@ -8,16 +8,20 @@ import Cookies from 'js-cookie';
 import styles from '../styles/pages/Home.module.css';
 import api from '../services/api';
 import { Notification } from '../components/Notification';
-
+import {LoadingOutlined} from '@ant-design/icons'
 
 
 export default function Home() {
   const router = useRouter()
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   async function handleLogin(e) {
     e.preventDefault();
+    console.log('aq');
+    
+    setLoading(true)
     try {
       
       const response = await api.post('/auth', {email, password});
@@ -36,7 +40,9 @@ export default function Home() {
         description:'Email ou senha incorretos', 
         title:'Erro no login'
       })
+
     }
+    setLoading(false)
     
 
   }
@@ -61,7 +67,10 @@ export default function Home() {
             onChange={e => setPassword(e.target.value)}
           />
 
-          <button className="button" type="submit">Entrar</button>
+          <button className="button" type="submit" disabled={loading}>
+            Entrar
+           {loading && <LoadingOutlined style={{marginLeft:16}}/>}
+          </button>
 
          
         </form>

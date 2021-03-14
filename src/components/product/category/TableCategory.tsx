@@ -2,7 +2,6 @@
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useContext } from 'react';
-import { BrandContext } from '../../../contexts/product/BrandContext';
 import { CategoryContext } from '../../../contexts/product/CategoryContext';
 
 const columns: ColumnsType<Categorys> = [
