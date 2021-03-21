@@ -104,7 +104,6 @@ export function CreateProductModal() {
 
   const handleRemoveClick = (index) => {
     const list = [...productProviders];
-    console.log(index, list);
 
     list.splice(index, 1);
     setProductProviders(list);
@@ -112,7 +111,6 @@ export function CreateProductModal() {
 
   function HandleChange(e, index) {
     const NewArray = [...productProviders];
-    console.log(index, e, 'change');
 
     NewArray[index].productProvider = e;
 

@@ -8,6 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: scroll
 }
 
 .container {
@@ -20,6 +21,7 @@
   text-align: start;
   position: relative;
   margin-left: 14rem;
+  margin-top: auto;
 }
 
 .container header {

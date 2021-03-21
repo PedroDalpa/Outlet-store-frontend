@@ -1,6 +1,6 @@
 import { Layout, Menu } from 'antd';
 
-import { RightOutlined, LoginOutlined } from '@ant-design/icons';
+import { RightOutlined, LoginOutlined, DropboxOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import { FaTshirt } from 'react-icons/fa';
@@ -40,7 +40,7 @@ export function Sidebar({ screen, display }:SidebarProps) {
                   <span className="anticon anticon-bank">
                     <FaTshirt size={16} color="#808a94" />
                   </span>
-          )}
+                )}
               >
                 <Menu.Item key="productBrand" icon={<RightOutlined />}>
 
@@ -72,6 +72,11 @@ export function Sidebar({ screen, display }:SidebarProps) {
                   </Link>
                 </Menu.Item>
               </SubMenu>
+              <Menu.Item key="purchase" icon={<DropboxOutlined />}>
+                <Link href="/purchase">
+                  Compras
+                </Link>
+              </Menu.Item>
 
               <Menu.Item key="logout" icon={<LoginOutlined />}>
 
