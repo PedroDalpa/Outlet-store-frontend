@@ -1,6 +1,8 @@
 import { Layout, Menu } from 'antd';
 
-import { RightOutlined, LoginOutlined, DropboxOutlined } from '@ant-design/icons';
+import {
+  RightOutlined, LoginOutlined, DropboxOutlined, ShoppingCartOutlined,
+} from '@ant-design/icons';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import { FaTshirt } from 'react-icons/fa';
@@ -75,6 +77,11 @@ export function Sidebar({ screen, display }:SidebarProps) {
               <Menu.Item key="purchase" icon={<DropboxOutlined />}>
                 <Link href="/purchase">
                   Compras
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="sell" icon={<ShoppingCartOutlined />}>
+                <Link href="/sell">
+                  Vendas
                 </Link>
               </Menu.Item>
 
