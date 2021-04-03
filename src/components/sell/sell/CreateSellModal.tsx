@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-multi-spaces */
 /* eslint-disable max-len */
 import { useContext, useEffect, useState } from 'react';
+import BarcodeReader from 'react-barcode-reader';
 
 import {
   Button,
@@ -15,6 +16,8 @@ import {
 
   PlusOutlined,
   MinusCircleOutlined,
+  SearchOutlined,
+  LoadingOutlined,
 } from '@ant-design/icons';
 import api from '../../../services/api';
 
@@ -31,15 +34,12 @@ const defaultErrorMessage = 'ocorreu um erro ao cadastrar a Compra, tente novame
 export function CreateSellModal() {
   const [fiscalNote, setFiscalNote] = useState('');
   const [totalValue, setTotalValue] = useState('');
-  const [products, setProducts] = useState([{
-    id: '',
-    name: '',
-  }]);
+  const [load, setLoad] = useState(false);
 
   const { closeCreateSellModal } = useContext(SellContext);
   const [productsSell, setSell] = useState([
     {
-      product: '', amount: '', totalValue: '', unitValue: 0,
+      productName: '', value: 0, barCode: '',
     },
   ]);
 
@@ -68,28 +68,20 @@ export function CreateSellModal() {
     }
   }
 
-  useEffect(() => {
-    api.get('/product', {})
-      .then((response) => {
-        setProducts(response.data);
-      });
-  }, []);
-
-  const handleAddClick = (e, index) => {
+  const handleAddClick = (e) => {
     e.preventDefault();
 
     setSell([
       ...productsSell,
       {
-        product: '',
-        amount: '',
-        totalValue: '',
-        unitValue: 0,
+        productName: '',
+        value: 0,
+        barCode: '',
       },
     ]);
   };
 
-  const handleRemoveClick = (index) => {
+  const handleRemoveClick = (index:number) => {
     const list = [...productsSell];
 
     list.splice(index, 1);
@@ -97,15 +89,14 @@ export function CreateSellModal() {
   };
 
   function HandleChange(e, index) {
-    // e.preventDefault();
+    e.preventDefault();
+
     const { name, value } = e.target;
+    console.log(name, value);
 
     const NewArray = [...productsSell];
 
     NewArray[index][name] = value;
-    if (name === 'totalValue') {
-      NewArray[index].unitValue = parseFloat(value) / parseFloat(NewArray[index].amount);
-    }
 
     setSell(NewArray);
   }
@@ -113,11 +104,50 @@ export function CreateSellModal() {
   async function HandleChangeProduct(e, index) {
     const NewArray = [...productsSell];
 
-    NewArray[index].product = e;
+    NewArray[index].productName = e;
 
     setSell(NewArray);
   }
 
+  const handleError = async (err:string) => {
+    setLoad(true);
+    const WHERE_IS_READE_BAR_CODE = productsSell.length - 1;
+    productsSell[WHERE_IS_READE_BAR_CODE].barCode = err;
+
+    const response = await api.get(`product/bar-code/${err}`);
+
+    const NewArray = [...productsSell];
+
+    NewArray[WHERE_IS_READE_BAR_CODE].productName = response.data.productName;
+
+    setSell(NewArray);
+    setLoad(false);
+  };
+
+  async function handleSearch(index:number) {
+    const response = await api.get(`product/bar-code/${productsSell[index].barCode}`);
+
+    const NewArray = [...productsSell];
+
+    NewArray[index].productName = response.data.productName;
+
+    setSell(NewArray);
+  }
+
+  const handleScan = async (data:string) => {
+    setLoad(true);
+    const WHERE_IS_READE_BAR_CODE = productsSell.length - 1;
+    productsSell[WHERE_IS_READE_BAR_CODE].barCode = data;
+
+    const response = await api.get(`product/bar-code/${data}`);
+
+    const NewArray = [...productsSell];
+
+    NewArray[WHERE_IS_READE_BAR_CODE].productName = response.data.productName;
+
+    setSell(NewArray);
+    setLoad(false);
+  };
   return (
     <div className={global.overlay}>
       <div className={global.container}>
@@ -150,80 +180,76 @@ export function CreateSellModal() {
 
           </div>
           <Divider />
-          {productsSell.map((selectedProduct, index) => (
+          {productsSell.map((selectedProduct, index:number) => (
             <>
               <Row gutter={5}>
+                <Col span={8}>
+                  <Form.Item
+                    labelCol={{ span: 23 }}
+                    label="Codigo de barras:"
+                    labelAlign="left"
+                  >
+                    <Input
+                      name="barCode"
+                      placeholder="Código de barras"
+                      type="text"
+                      value={selectedProduct.barCode}
+                      onChange={(e) => { HandleChange(e, index); }}
+                    />
 
-                <Col span={24}>
+                  </Form.Item>
+
+                </Col>
+                <Col
+                  span={4}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <SearchOutlined
+                    style={{
+                      fontSize: 18,
+                      color: '#3b4357',
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSearch(index);
+                    }}
+                  />
+                </Col>
+                <Col style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                >
+                  <h1>
+                    Ou escanei o código com o leitor
+                    {' '}
+                    {load && <LoadingOutlined />}
+
+                  </h1>
+                </Col>
+              </Row>
+              <Row gutter={5}>
+
+                <Col span={16}>
                   <Form.Item
                     labelCol={{ span: 23 }}
                     label="Produto:"
                     labelAlign="left"
                   >
-                    <Select
-                      showSearch
-                      placeholder="Selecione"
-                      size="large"
-                      onChange={(e) => { HandleChangeProduct(e, index); }}
-                      value={selectedProduct.product}
-
-                      filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                      // eslint-disable-next-line max-len
-                      filterSort={(optionA, optionB) => optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())}
-                    >
-
-                      {products.map((option) => (
-                        <>
-                          <Option key={option.id} value={option.id}>
-                            {option.name}
-                          </Option>
-                        </>
-                      ))}
-                    </Select>
-
-                  </Form.Item>
-                </Col>
-
-              </Row>
-              <Row gutter={5}>
-                <Col span={8}>
-                  <Form.Item
-                    labelCol={{ span: 23 }}
-                    label="Quantidade:"
-                    labelAlign="left"
-                  >
                     <Input
-                      name="amount"
-                      placeholder="quantidade"
-                      type="number"
-                      value={selectedProduct.amount}
-                      onChange={(e) => {
-                        e.preventDefault();
 
-                        HandleChange(e, index);
-                      }}
+                      placeholder="Produto"
+                      disabled
+                      value={selectedProduct.productName}
                     />
+
                   </Form.Item>
                 </Col>
-                <Col span={8}>
-                  <Form.Item
-                    labelCol={{ span: 23 }}
-                    label="Valor de total das peças:"
-                    labelAlign="left"
 
-                  >
-                    <Input
-                      name="totalValue"
-                      placeholder="quantidade"
-                      type="number"
-                      value={selectedProduct.totalValue}
-                      onChange={(e) => {
-                        e.preventDefault();
-                        HandleChange(e, index);
-                      }}
-                    />
-                  </Form.Item>
-                </Col>
                 <Col span={8}>
                   <Form.Item
                     labelCol={{ span: 23 }}
@@ -232,11 +258,11 @@ export function CreateSellModal() {
 
                   >
                     <Input
-                      name="unitValue"
+                      name="value"
                       placeholder="quantidade"
                       type="number"
-                      value={selectedProduct.unitValue}
-                      disabled
+                      value={selectedProduct.value}
+                      onChange={(e) => { HandleChange(e, index); }}
                       style={{ width: '90%', marginRight: '0.7rem' }}
                     />
                     {productsSell.length !== 1 && (
@@ -255,13 +281,17 @@ export function CreateSellModal() {
                 key="primary"
                 title="Mais produtos"
                 style={{ width: '100%' }}
-                onClick={(e) => handleAddClick(e, index)}
+                onClick={(e) => handleAddClick(e)}
               >
                 <PlusOutlined />
                 produto
               </Button>
               )}
               <Divider />
+              <BarcodeReader
+                onError={handleError}
+                onScan={handleScan}
+              />
             </>
           ))}
 

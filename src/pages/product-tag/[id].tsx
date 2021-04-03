@@ -3,13 +3,17 @@ import { GetServerSideProps } from 'next';
 import api from '../../services/api';
 import styles from '../../styles/pages/product-tag/Tags.module.css';
 
+interface ITag{
+  name:string,
+  barCode:string
+}
 export default function Product({ tags }) {
   return (
     <div className={styles.etiquetas}>
-      {tags.map((tag) => (
+      {tags.map((tag:ITag) => (
         <span>
           <div className={styles.etiqueta}>
-            <h1>{tag.name}</h1>
+            <h1>{tag.name }</h1>
 
             <BarCode
               value={tag.barCode}
@@ -17,6 +21,7 @@ export default function Product({ tags }) {
               width={1.2}
               height={28}
               fontSize={12}
+              key={tag.barCode}
             />
           </div>
         </span>
